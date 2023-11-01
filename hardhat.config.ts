@@ -1,15 +1,12 @@
 import "dotenv/config";
-import "@nomiclabs/hardhat-etherscan";
+import "@lz-kit/cli/hardhat";
 import "@nomiclabs/hardhat-solhint";
-import "@nomiclabs/hardhat-waffle";
+import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-abi-exporter";
 import "hardhat-deploy";
-import "hardhat-gas-reporter";
 import "hardhat-spdx-license-identifier";
 import "hardhat-watcher";
-import "solidity-coverage";
 import "@primitivefi/hardhat-dodoc";
-import "@typechain/hardhat";
 
 import { HardhatUserConfig, task } from "hardhat/config";
 
@@ -78,7 +75,7 @@ const config: HardhatUserConfig = {
             saveDeployments: true,
             tags: ["test", "local"],
         },
-        mainnet: {
+        ethereum: {
             url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
             accounts,
             chainId: 1,
@@ -175,7 +172,7 @@ const config: HardhatUserConfig = {
             tags: ["staging"],
         },
         fantom: {
-            url: `https://rpc.testnet.fantom.network/`,
+            url: `https://rpc.ankr.com/fantom/`,
             accounts,
             chainId: 250,
             live: true,
@@ -183,7 +180,7 @@ const config: HardhatUserConfig = {
             tags: ["production"],
         },
         "fantom-testnet": {
-            url: `https://rpc.testnet.fantom.network/`,
+            url: `https://rpc.ankr.com/fantom_testnet/`,
             accounts,
             chainId: 4002,
             live: true,
@@ -195,7 +192,7 @@ const config: HardhatUserConfig = {
         eachLine: removeConsoleLog(bre => bre.network.name !== "hardhat" && bre.network.name !== "localhost"),
     },
     solidity: {
-        version: "0.8.17",
+        version: "0.8.18",
         settings: {
             optimizer: {
                 enabled: true,
@@ -206,9 +203,12 @@ const config: HardhatUserConfig = {
     },
     watcher: {
         compile: {
-            tasks: ["compile"],
+            tasks: [],
             files: ["./contracts"],
-            verbose: true,
+            verbose: false,
+            clearOnStart: true,
+            start: "clear && yarn build || true",
+            runOnLaunch: true,
         },
     },
 };
